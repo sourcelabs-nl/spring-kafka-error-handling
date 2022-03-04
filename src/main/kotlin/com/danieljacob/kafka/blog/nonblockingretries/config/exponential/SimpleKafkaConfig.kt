@@ -1,4 +1,4 @@
-package com.danieljacob.kafka.blog.nonblockingretries.config.blocking
+package com.danieljacob.kafka.blog.nonblockingretries.config.exponential
 
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
@@ -16,13 +16,12 @@ import org.springframework.util.backoff.ExponentialBackOff
 
 @EnableKafka
 @Configuration
-@Profile("blocking")
+@Profile("exponential")
 class SimpleKafkaConfig {
 
     @Bean
     fun consumerFactory(properties: KafkaProperties): ConsumerFactory<String?, String?> =
         DefaultKafkaConsumerFactory(properties.buildConsumerProperties())
-
 
     @Bean
     fun kafkaListenerContainerFactory(properties: KafkaProperties): ConcurrentKafkaListenerContainerFactory<String?, String?> {
@@ -43,13 +42,10 @@ class SimpleKafkaConfig {
     }
 
     @Bean
-    fun errorHandler(kafkaProperties: KafkaProperties): DefaultErrorHandler {
-        val backOff = ExponentialBackOff(3000, 5.0)
-        backOff.maxElapsedTime = MAX_ELAPSED_TIME
-        return DefaultErrorHandler(DeadLetterPublishingRecoverer(errorKafkaTemplate(kafkaProperties)), backOff)
-    }
-
-    companion object {
-        const val MAX_ELAPSED_TIME: Long = 300000
-    }
+    fun errorHandler(kafkaProperties: KafkaProperties): DefaultErrorHandler =
+        run {
+            val backOff = ExponentialBackOff(3000, 2.0)
+            backOff.maxElapsedTime = 60000L
+            DefaultErrorHandler(DeadLetterPublishingRecoverer(errorKafkaTemplate(kafkaProperties)), backOff)
+        }
 }

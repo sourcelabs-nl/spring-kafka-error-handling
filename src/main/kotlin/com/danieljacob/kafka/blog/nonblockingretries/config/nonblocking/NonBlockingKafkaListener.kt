@@ -1,8 +1,7 @@
 package com.danieljacob.kafka.blog.nonblockingretries.config.nonblocking
 
-import com.danieljacob.kafka.blog.nonblockingretries.logging.info
+import com.danieljacob.kafka.blog.log
 import org.apache.kafka.common.errors.SerializationException
-import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Profile
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.annotation.RetryableTopic
@@ -18,14 +17,12 @@ import org.springframework.stereotype.Component
 @Component
 @Profile("non-blocking")
 class NonBlockingKafkaListener {
-    private val log = LoggerFactory.getLogger(NonBlockingKafkaListener::class.java)
 
     @RetryableTopic(
         attempts = "\${retry-attempts}",
-        backoff = Backoff(delay = 200, multiplier = 5.0, maxDelay = 0, maxDelayExpression = "3600000"),
-        numPartitions = "\${number-of-partitions}",
+        backoff = Backoff(delay = 200, multiplier = 3.0, maxDelay = 0),
+        numPartitions = "1",
         topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
-        dltTopicSuffix = "\${dlt-topic-suffix}",
         dltStrategy = DltStrategy.FAIL_ON_ERROR,
         exclude = [
             DeserializationException::class,
@@ -43,7 +40,7 @@ class NonBlockingKafkaListener {
         topics = ["\${topic}"]
     )
     fun onReceive(message: String) {
-        log.info { "processing message: $message"}
+        log.info("processing message: $message")
         throw Exception()
     }
 }

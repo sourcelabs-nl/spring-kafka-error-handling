@@ -25,22 +25,20 @@ class SimpleKafkaConfig {
 
 
     @Bean
-    fun kafkaListenerContainerFactory(properties: KafkaProperties): ConcurrentKafkaListenerContainerFactory<String?, String?> {
-        val factory = ConcurrentKafkaListenerContainerFactory<String?, String?>()
-        factory.consumerFactory = consumerFactory(properties)
-        factory.setCommonErrorHandler(errorHandler(properties))
-        return factory
-    }
+    fun kafkaListenerContainerFactory(properties: KafkaProperties): ConcurrentKafkaListenerContainerFactory<String?, String?> =
+        ConcurrentKafkaListenerContainerFactory<String?, String?>()
+            .apply {
+                consumerFactory = consumerFactory(properties)
+                setCommonErrorHandler(errorHandler(properties))
+        }
 
     @Bean
-    fun kafkaErrorProducerFactory(kafkaProperties: KafkaProperties): DefaultKafkaProducerFactory<String, String> {
-        return DefaultKafkaProducerFactory(kafkaProperties.buildProducerProperties())
-    }
+    fun kafkaErrorProducerFactory(kafkaProperties: KafkaProperties): DefaultKafkaProducerFactory<String, String> =
+        DefaultKafkaProducerFactory(kafkaProperties.buildProducerProperties())
 
     @Bean
-    fun errorKafkaTemplate(kafkaProperties: KafkaProperties): KafkaTemplate<String, String> {
-        return KafkaTemplate(kafkaErrorProducerFactory(kafkaProperties))
-    }
+    fun errorKafkaTemplate(kafkaProperties: KafkaProperties): KafkaTemplate<String, String> =
+        KafkaTemplate(kafkaErrorProducerFactory(kafkaProperties))
 
     @Bean
     fun errorHandler(kafkaProperties: KafkaProperties): DefaultErrorHandler =

@@ -1,6 +1,5 @@
 topic: my-topic
-retry.attempts: 8
-dlt-topic-suffix: errors
+retry-attempts: 8
 server:
   port: 8080
 management:
