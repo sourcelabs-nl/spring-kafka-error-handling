@@ -1,4 +1,4 @@
-package com.danieljacob.kafka.blog.nonblockingretries.config.nonblocking
+package com.danieljacob.kafka.blog.nonblockingretries.nonblocking
 
 import com.danieljacob.kafka.blog.log
 import org.apache.kafka.common.errors.SerializationException

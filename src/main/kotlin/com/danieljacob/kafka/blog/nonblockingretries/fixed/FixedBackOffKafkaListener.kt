@@ -1,5 +1,5 @@
 
-package com.danieljacob.kafka.blog.nonblockingretries.config.fixed
+package com.danieljacob.kafka.blog.nonblockingretries.fixed
 
 import com.danieljacob.kafka.blog.log
 import org.springframework.context.annotation.Profile

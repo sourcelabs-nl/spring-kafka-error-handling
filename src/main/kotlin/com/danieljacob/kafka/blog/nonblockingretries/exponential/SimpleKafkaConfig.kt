@@ -1,4 +1,4 @@
-package com.danieljacob.kafka.blog.nonblockingretries.config.exponential
+package com.danieljacob.kafka.blog.nonblockingretries.exponential
 
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
